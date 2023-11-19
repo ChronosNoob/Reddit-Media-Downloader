@@ -23,6 +23,7 @@ Enter the secret and id from the application you just made into **UserData.json*
 
 ![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/89d93829-e66d-4dea-a007-f1bb0a1afda0)
 
+Enter your username an password t **UserData.json**
 
 **Usage**
 

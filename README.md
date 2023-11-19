@@ -11,6 +11,19 @@ GUI may be added in the future but is not a priority.
 
 Open cmd/terminal to repository location and run `pip install -r requirements.txt`
 
+**Setup:**
+
+Go to https://www.reddit.com/prefs/apps
+
+Create new script with desired name and description, set redirect url to **the full version** of any websites url.
+
+![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/5e2eb15f-195b-4daa-afed-d1aa6f381e39)
+
+Enter the secret and id from the application you just made into **UserData.json**
+
+![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/89d93829-e66d-4dea-a007-f1bb0a1afda0)
+
+
 **Usage**
 
 Run main.py

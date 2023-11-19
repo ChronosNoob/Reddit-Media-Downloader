@@ -15,9 +15,9 @@ while True:
         Subreddits = str(input("Invalid input: Enter subreddits of choice (Separated by commas) : ")).strip(" ")
     else:
         break
-qualitychoice = int(input("What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ reccomended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ")) #Takes user data for desired quality
+qualitychoice = input("What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ reccomended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ") #Takes user data for desired quality
 while True:
-    if qualitychoice == None or qualitychoice > 100 or qualitychoice < 0:
+    if int(qualitychoice) == None or int(qualitychoice) > 100 or int(qualitychoice) < 0 or qualitychoice.isnumeric() == False:
         qualitychoice = int(input("Invalid Input: What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ recommended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ")) #Takes user data for desired quality
     else:
         break

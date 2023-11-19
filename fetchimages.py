@@ -7,12 +7,22 @@ import time
 import datetime
 import os
 from redvid import Downloader
+from pytube import YouTube
 
 
-def add_margin(pil_img, bottom):
+def downloadyoutubevideo(link,directory):
+	youtubeobject = YouTube(link)
+	youtubeobject = youtubeobject.streams.get_highest_resolution()
+	try:
+		youtubeobject.download('exported/'+directory)
+		print("Downloaded")
+	except:
+		print("Youtube fetching error has occured")
+
+def add_margin(pil_img, bottom): #Adds space for title on the bottom of images
     width, height = pil_img.size
     new_height = height + bottom
-    result = Image.new(pil_img.mode, (width, int(new_height)), (50,50,50))
+    result = Image.new(pil_img.mode, (width, int(new_height)), (50,50,50)) #New image with extra space
     result.paste(pil_img, (0, 0))
     return result
 
@@ -20,8 +30,8 @@ def add_margin(pil_img, bottom):
 def GetPosts(Subreddits,TopPosts):
 	CompleteData = []
 	SubredditData = []
-	with open("UserData.json", "r") as read_file:
-    		data = json.load(read_file)
+	with open("UserData.json", "r") as read_file: # Reads login details.json
+    		data = json.load(read_file) #Converts json to dict
 	reddit = praw.Reddit(
 						client_id = data["client_id"] ,
 						client_secret = data["client_secret"] ,
@@ -30,52 +40,70 @@ def GetPosts(Subreddits,TopPosts):
 						user_agent = data["user_agent"]
 						)
 	for i in range(len(Subreddits)):
-		print(Subreddits[i])   
+		print(Subreddits[i]) #Prints subreddit name  
 		try:
-			subreddit = reddit.subreddit(Subreddits[i])
+			subreddit = reddit.subreddit(Subreddits[i]) #Instantiates subreddit 
+			SubredditData = [] #Initialises empty data list
 			for submission in subreddit.hot(limit=TopPosts):
 				print("Post Titled: " + submission.title)
-				imgurls = []
-				if "gallery" in submission.url:
+				imgurls = [] # makes empty url list
+				if "gallery" in submission.url: #if post is a gallery find the image urls
 					for i in submission.media_metadata.items():
 						URL = i[1]['p'][0]['u']
 						URL = URL.split("?")[0].replace("preview", "i")
 						imgurls.append(URL)
 				else:
-					imgurls.append(submission.url)
+					imgurls.append(submission.url) # adds post url if not a gallery
 				print("\n")
-				SubmissionData = [submission.title,imgurls]
-				SubredditData.append(SubmissionData)
+				SubmissionData = [submission.title,imgurls] 
+				NewData = [SubmissionData,submission.url] #Redundant
+				SubredditData.append(NewData)
+			#print(subreddit.url)
+			SubredditData = [SubredditData,subreddit.url] 
+			#print(NewData)
 			CompleteData.append(SubredditData)
-			CompleteData.append(subreddit.url)
-		except:
-			print("Error: Does the subreddit exist?")
+		except Exception as error:
+			print("Error: Does the subreddit exist?:  \n" + str(error)) # Error handling
 	return CompleteData
 
 def Export(CompleteData,quality):
-	now = datetime.datetime.now()
-	dtstring = now.strftime("%b-%d-%Y %H:%M:%S")
-	for subredditindex in range(0,len(CompleteData),2):
-		subredditname = CompleteData[subredditindex+1]
-		subreddit = CompleteData[subredditindex]
+	now = datetime.datetime.now() #Gets current date and time
+	print(CompleteData)
+	dtstring = now.strftime("%b-%d-%Y %H:%M:%S") #Turns date and time to formatted string
+	for subredditindex in range(len(CompleteData)):
+		subredditname = CompleteData[subredditindex][1]
+		subreddit = CompleteData[subredditindex][0]
+		#print(subredditname)
 		subredditname = subredditname.strip("r/")
 		directory = dtstring + "/" + subredditname
+		#print(directory)
+		#print(subreddit)
+		time.sleep(10)
 		if not os.path.exists("exported/"+directory):
 			os.makedirs("exported/"+directory)
 		for submission in subreddit:
 			#print(submission)
-			Title = submission[0]
-			urls = submission[1]
+			Title = submission[0][0]
+			urls = submission[0][1]
+			#print(urls)
 			if "v.redd.it" in urls[0]:
 				downloader = Downloader(max_q=True)
 				downloader.url = urls[0]
 				downloader.filename = "exported/"+directory+"/"+Title
 				downloader.download()
 				continue
-			try:
-				for imgurl in urls:
+			elif "youtube" in urls[0] or "youtu.be" in urls[0]:
+				print("Attempting to download youtube video.")
+				downloadyoutubevideo(urls[0],directory)
+				continue
+			elif "imgur" in urls[0]:
+				continue
+			count = 0
+			for imgurl in urls:
+				try:
+					count += 1
 					response = requests.get(imgurl)
-					print(imgurl)
+					print("ImageURL: " + imgurl)
 					if response.status_code == 200:
 						image_data = BytesIO(response.content)
 						im = Image.open(image_data)
@@ -100,11 +128,11 @@ def Export(CompleteData,quality):
 					Draw = ImageDraw.Draw(paddedimage)	
 					Draw.text((im.size[0]*0.01,pad),Title,(255,255,255), font=Font)
 					print("Image pasted")
-					paddedimage.save("exported/"+directory+"/"+Title+".jpg", quality=quality,optimize=True)
+					paddedimage.convert('RGB')
+					paddedimage.save("exported/"+directory+"/"+Title + str(count)+".jpg", quality=quality,optimize=True)
 					paddedimage.close()
-			except:
-				print("FAIL")
-
+				except Exception as error:
+					print("Error: \n" + str(error))
 
 
 PostCount = input("How many top posts should be exported?: ")

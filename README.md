@@ -5,6 +5,8 @@ Authorisation data should be placed in UserData.json in this format.
 
 ![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/184d7d8e-673c-4799-9da0-ee50c5e0526a)
 
+GUI may be added in the future but is not a priority.
+
 **Installation:**
 
 Open cmd/terminal to repository location and run `pip install -r requirements.txt`

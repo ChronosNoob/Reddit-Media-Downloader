@@ -18,7 +18,7 @@ while True:
 qualitychoice = int(input("What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ reccomended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ")) #Takes user data for desired quality
 while True:
     if qualitychoice == None or qualitychoice > 100 or qualitychoice < 0:
-        qualitychoice = int(input("Invalid Input: What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ reccomended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ")) #Takes user data for desired quality
+        qualitychoice = int(input("Invalid Input: What quality do you want the file to be compressed to? \nOn a scale of 1-100. 90+ recommended for optimum quality \nVideos will be automatically downloaded at max resolution \n-------: ")) #Takes user data for desired quality
     else:
         break
 TitleOnImage = input("Do you want the title to be visible on the image? (Y/N) \nInput Here: ")
@@ -26,16 +26,16 @@ if TitleOnImage == "Y" or TitleOnImage == "y":
     TitleOnImage = True
 else:
     TitleOnImage = False
-MaxHeight = input("Enter maximum height for resizing: ") #Takes in number of posts to be exported
+MaxHeight = input("Enter maximum height in pixels (3000 recommended) : ") #Takes maximum width
 while True:
     if PostCount.isnumeric() == False:
-        PostCount = input("Invalid input: Enter maximum height for resizing: ") # Asks the user to input number again if input is not numeric
+        PostCount = input("Invalid input: Enter maximum height: ") # Asks the user to input number again if input is not numeric
     else:
         break
 MaxWidth = input("Enter maximum width for resizing: ") #Takes in number of posts to be exported
 while True:
     if PostCount.isnumeric() == False:
-        PostCount = input("Invalid input: Enter maximum width for resizing: ") # Asks the user to input number again if input is not numeric
+        PostCount = input("Invalid input: Enter maximum width in pixels (2000 recommended): ") # Asks the user to input number again if input is not numeric
     else:
         break
 SplitReddits = Subreddits.split(",")#Splits input into array

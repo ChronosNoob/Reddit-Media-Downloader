@@ -7,5 +7,6 @@ Authorisation data should be placed in UserData.json in this format.
 
 **Installation:**
 Open cmd/terminal to repository location and run `pip install -r requirements.txt`
+
 **Usage**
 Run main.py

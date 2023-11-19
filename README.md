@@ -17,7 +17,7 @@ Go to https://www.reddit.com/prefs/apps
 
 Create new script with desired name and description, set redirect url to **the full version** of any websites url.
 
-![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/5e2eb15f-195b-4daa-afed-d1aa6f381e39)
+![image](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/2f05add9-e194-4f44-a915-7f4f2202fdae)
 
 Enter the secret and id from the application you just made into **UserData.json**
 

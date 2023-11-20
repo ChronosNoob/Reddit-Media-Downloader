@@ -26,7 +26,8 @@ def add_margin(pil_img, bottom): #Adds space for title on the bottom of images
     result.paste(pil_img, (0, 0))
     return result
 
-def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight):
+def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight,thread):
+    totalcount = 0
     now = datetime.datetime.now() #Gets current date and time
     #print(CompleteData)
     dtstring = now.strftime("%b-%d-%Y %H:%M:%S") #Turns date and time to formatted string
@@ -99,14 +100,19 @@ def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight):
                         paddedimage = im
                     #paddedimage = paddedimage.convert('RGB') #Forces image to RGB if it has transparency data
                     filetype = im.format
+                    #print(filetype)
                     if filetype == "GIF":
                         paddedimage.close()
                         continue
+                    elif filetype == "JPEG":
+                        filetype = "jpg"
                     paddedimage.thumbnail((int(MaxWidth),int(MaxHeight)))
-                    paddedimage.save("exported/"+directory+"/"+Title + str(count)+"."+filetype, quality=quality,optimize=True)
+                    Title = Title.strip("/")
+                    paddedimage.save("exported/"+directory+"/"+Title + str(count)+"."+filetype, quality=int(quality),optimize=True)
                     paddedimage.close()
                     finaltime = (time.time() - start_time)
-                    print(Fore.GREEN+str(count) + ": Media: "+Title + "  " + imgurl + " took " + str(finaltime)+Style.RESET_ALL  )
+                    totalcount += 1
+                    print( "Thread " + thread +": File" + Fore.GREEN+str(totalcount) + " : Media: "+Title + "  " + imgurl + " took " + str(finaltime)+Style.RESET_ALL  )
                 except Exception as error:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]

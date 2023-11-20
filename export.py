@@ -105,7 +105,7 @@ def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight,thread):
                     elif filetype == "JPEG":
                         filetype = "jpg"
                     paddedimage.thumbnail((int(MaxWidth),int(MaxHeight)))
-                    Title = Title.strip("/")
+                    Title = Title.replace("/","\")
                     paddedimage.save("exported/"+directory+"/"+Title + str(count)+"."+filetype, quality=int(quality),optimize=True)
                     paddedimage.close()
                     finaltime = (time.time() - start_time)

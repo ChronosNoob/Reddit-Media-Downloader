@@ -45,9 +45,11 @@ if len(CompleteData) != 1: #Threads code with two threads if there is more than 
     midpoint = len(CompleteData) // 2
     first_half = CompleteData[:midpoint]
     second_half = CompleteData[midpoint:]
-    ThreadOne = threading.Thread(target=ExportActions.Export,args=(first_half,qualitychoice,TitleOnImage,MaxWidth,MaxHeight)) 
-    ThreadTwo = threading.Thread(target=ExportActions.Export,args=(second_half,qualitychoice,TitleOnImage,MaxWidth,MaxHeight))
+    ThreadOne = threading.Thread(target=ExportActions.Export,args=(first_half,qualitychoice,TitleOnImage,MaxWidth,MaxHeight,1)) 
+    ThreadTwo = threading.Thread(target=ExportActions.Export,args=(second_half,qualitychoice,TitleOnImage,MaxWidth,MaxHeight,2))
     ThreadOne.start()
     ThreadTwo.start()
     ThreadOne.join()
     ThreadTwo.join()
+else:
+    ExportActions.Export(CompleteData,qualitychoice,TitleOnImage,MaxWidth,MaxHeight)

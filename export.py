@@ -59,8 +59,6 @@ def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight,thread):
                 continue
             elif "imgur" in urls[0]: # Checks if url is imgur link, will be downloaded in future
                 continue
-            elif "redgif" in urls[0]:
-                continue
             elif "gif" in urls[0]:
                 continue
             count = 0 #numbering for galleries

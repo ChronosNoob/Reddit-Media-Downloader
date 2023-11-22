@@ -1,9 +1,8 @@
-import json
-import praw
+
 import threading
 import export as ExportActions
 import fetch as WebActions
-PostCount = input("How many hot posts should be exported?: ") #Takes in number of posts to be exported
+PostCount = input("How many hot posts should be exported? (Be aware there may be more files than this created due to galleries): ") #Takes in number of posts to be exported
 while True:
     if PostCount.isnumeric() == False:
         PostCount = input("Invalid input: How many hot posts should be exported?: ") # Asks the user to input number again if input is not numeric
@@ -26,20 +25,33 @@ if TitleOnImage == "Y" or TitleOnImage == "y":
     TitleOnImage = True
 else:
     TitleOnImage = False
-MaxHeight = input("Enter maximum height in pixels (3000 recommended) : ") #Takes maximum width
+MaxHeight = input("Enter maximum height in pixels (3000 recommended) : ") # Takes maximum width
 while True:
     if PostCount.isnumeric() == False:
         PostCount = input("Invalid input: Enter maximum height: ") # Asks the user to input number again if input is not numeric
     else:
         break
-MaxWidth = input("Enter maximum width for resizing: ") #Takes in number of posts to be exported
+MaxWidth = input("Enter maximum width for resizing (2000 recommended) : ") #Takes in number of posts to be exported
 while True:
     if PostCount.isnumeric() == False:
         PostCount = input("Invalid input: Enter maximum width in pixels (2000 recommended): ") # Asks the user to input number again if input is not numeric
     else:
         break
+
+top = input("Do you want to download 'top' or 'hot' posts? : ")
+while True:
+    if top == "Top" or top == "top" or top == True:
+        top = True
+        toptype = input("Enter time filter in lowercase(e.g 'all'): ")
+        if toptype == "all" or toptype == "hour" or toptype == "month" or toptype == 'week' or toptype == 'day' or toptype == "year":
+            break
+    if top == "hot" or top == 'Hot':
+        top = False
+        break
+    else:
+        top = input("Invalid Input: Do you want to download 'top' or 'hot' posts? : ")
 SplitReddits = Subreddits.split(",")#Splits input into array
-CompleteData = WebActions.GetPosts(SplitReddits,int(PostCount))
+CompleteData = WebActions.GetSubredditPosts(SplitReddits,int(PostCount),top,toptype)
 
 if len(CompleteData) != 1: #Threads code with two threads if there is more than one subreddit
     midpoint = len(CompleteData) // 2
@@ -52,4 +64,4 @@ if len(CompleteData) != 1: #Threads code with two threads if there is more than 
     ThreadOne.join()
     ThreadTwo.join()
 else:
-    ExportActions.Export(CompleteData,qualitychoice,TitleOnImage,MaxWidth,MaxHeight)
+    ExportActions.Export(CompleteData,qualitychoice,TitleOnImage,MaxWidth,MaxHeight, 1)

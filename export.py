@@ -35,62 +35,72 @@ def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight,thread):
         subredditname = CompleteData[subredditindex][1] #grabs subreddit name in r/ form
         subreddit = CompleteData[subredditindex][0] # grabs subreddit data
         #print(subredditname)
-        subredditname = subredditname.strip("r/") #removes r/ from name as it will create a new directory
+        subredditname = subredditname.replace("/",'\\') #replaces r/ in name as forward-slash creates a new directory
         directory = dtstring + "/" + subredditname # sets output directory
         #print(directory)
         #print(subreddit)
         time.sleep(10)
-        if not os.path.exists("exported/"+directory): #makes directory if it does not exist already, exists for possibility of two instances running simultaneously
+        if not os.path.exists("exported/"+directory): #makes directory if it does not exist already, exists for possibility of two instances running simultaneously.
             os.makedirs("exported/"+directory)
-        for submission in subreddit: #iterates through subreddit data
-            #print(submission) #Debug
-            Title = submission[0][0] #Grabs Title
-            urls = submission[0][1] #Grabs URLs
-            #print(urls) #Debug
-            if "v.redd.it" in urls[0]: #Checks if url is reddit video url
-                downloader = Downloader(max_q=True) 
-                downloader.url = urls[0]
-                downloader.filename = "exported/"+directory+"/"+Title
-                downloader.download() # Downloads video
+        for submission in subreddit: #iterates through subreddit data.
+            #print(submission)
+            #print(submission) #Debug.
+            Title = submission[0] #Grabs Title.
+            Title = Title.strip("/")
+            urls = submission[1] #Grabs URLs.
+            #print(urls) #Debug.
+            try:
+                if "v.redd.it" in urls[0]: #Checks if url is reddit video url.
+                    try:
+                        downloader = Downloader(max_q=True) 
+                        downloader.url = urls[0]
+                        downloader.filename = "exported/"+directory+"/"+Title
+                        downloader.download() # Downloads video
+                        continue
+                    except:
+                        continue
+                elif "youtube" in urls[0] or "youtu.be" in urls[0]: #Checks if url is youtube link.
+                    print("Attempting to download youtube video.")
+                    downloadyoutubevideo(urls[0],directory)
+                    continue
+                elif "imgur" in urls[0]: # Checks if url is imgur link, will be downloaded in future.
+                    continue
+                elif "gif" in urls[0]:
+                    continue
+            except:
                 continue
-            elif "youtube" in urls[0] or "youtu.be" in urls[0]: #Checks if url is youtube link
-                print("Attempting to download youtube video.")
-                downloadyoutubevideo(urls[0],directory)
-                continue
-            elif "imgur" in urls[0]: # Checks if url is imgur link, will be downloaded in future
-                continue
-            elif "gif" in urls[0]:
-                continue
-            count = 0 #numbering for galleries
-            for imgurl in urls: #loops through urls
+            count = 0 #numbering for galleries.
+            #print(urls)
+            for imgurl in urls: #loops through urls.
+                #print(imgurl)
                 start_time = time.time()
                 try:
                     count += 1
-                    response = requests.get(imgurl) #gets raw image from internet
+                    response = requests.get(imgurl) #gets raw image from internet.
                     #print("ImageURL: " + imgurl)
                     if response.status_code == 200:
-                        image_data = BytesIO(response.content) #turns image into file
+                        image_data = BytesIO(response.content) #turns image into file.
                         im = Image.open(image_data)
                     #print("Image opened")
                     if TitleOnImage is True:
                         TitleDraw = subredditname +" - "+ Title
-                        width, height = im.size #grabs height
+                        width, height = im.size #grabs height.
                         TitleFontSize = 1
                         Font = ImageFont.truetype("afont.ttf", TitleFontSize)
                         img_fraction = 0.8
-                        #print(Font.getlength) #Debug
-                        #print(img_fraction*width) #Debug
+                        #print(Font.getlength) # Debug.
+                        #print(img_fraction*width) # Debug.
                         while Font.getlength(TitleDraw) < img_fraction*width and TitleFontSize < 200:
                             # iterate until the text size is just larger than the criteria
-                            # print(Font.getlength) #Debug
+                            # print(Font.getlength) #Debug.
                             TitleFontSize += 1
                             Font = ImageFont.truetype("afont.ttf", TitleFontSize)
-                            left,top,right,bottom = Font.getbbox(TitleDraw) # Gets the coords of each corner of the text. In use instead of .getsize() as getsize is deprecated
-                            Fontheight = bottom - top #finds height from coords
-                        margin = Fontheight*1.5 # Finds margin height based on size of font
-                        pad = (0.10 * margin) + height # Gives location for text to be written based on margin height
-                        margin += 0.10*margin # adds padding height to margin size on the bottom to have quasi-equal spacing
-                        paddedimage = add_margin(im,margin) # Refer to function
+                            left,top,right,bottom = Font.getbbox(TitleDraw) # Gets the coords of each corner of the text. Used instead of .getsize() as getsize is deprecated.
+                            Fontheight = bottom - top #finds height from coords.
+                        margin = Fontheight*1.5 # Finds margin height based on size of font.
+                        pad = (0.10 * margin) + height # Gives location for text to be written based on margin height.
+                        margin += 0.10*margin # adds padding height to margin size on the bottom to have quasi-equal spacing.
+                        paddedimage = add_margin(im,margin) # Refer to function.
                         Draw = ImageDraw.Draw(paddedimage)    
                         Draw.text((im.size[0]*0.01,pad),TitleDraw ,(255,255,255), font=Font) # Writes text to image
                         #print("Image pasted")
@@ -105,12 +115,11 @@ def Export(CompleteData,quality,TitleOnImage,MaxWidth,MaxHeight,thread):
                     elif filetype == "JPEG":
                         filetype = "jpg"
                     paddedimage.thumbnail((int(MaxWidth),int(MaxHeight)))
-                    Title = Title.replace("/","\")
                     paddedimage.save("exported/"+directory+"/"+Title + str(count)+"."+filetype, quality=int(quality),optimize=True)
                     paddedimage.close()
                     finaltime = (time.time() - start_time)
                     totalcount += 1
-                    print( "Thread " + thread +": File" + Fore.GREEN+str(totalcount) + " : Media: "+Title + "  " + imgurl + " took " + str(finaltime)+Style.RESET_ALL  )
+                    print( "Thread " + str(thread) +": File " +str(totalcount) +Fore.GREEN + " : Media: "+Title + "  " + imgurl + " took " + str(finaltime)+Style.RESET_ALL  )
                 except Exception as error:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]

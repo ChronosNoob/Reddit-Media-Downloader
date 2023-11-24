@@ -43,7 +43,7 @@ while True:
     if top == "Top" or top == "top" or top == True:
         top = True
         toptype = input("Enter time filter in lowercase(e.g 'all'): ")
-        if toptype == "all" or toptype == "hour" or toptype == "month" or toptype == 'week' or toptype == 'day' or toptype == "year":
+        if toptype in ("all", "hour", "month", 'week', 'day', "year"):
             break
     if top == "hot" or top == 'Hot':
         top = False

@@ -27,4 +27,13 @@ Add your username and password to **UserData.json**
 
 **Usage**
 
+
 Run main.py
+
+**Examples:**
+
+![After I posted my painting of Bad Luck Brian, Mr  Bad Luck himself contacted me to purchase it 1](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/fa28c715-7498-4895-89d6-dffb2f5e2d70)
+![Aftermath from a sleepover in 19961](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/25028cab-1d9d-4989-a6ec-d3bce73b963e)
+![Cotton picker at night looks like a huge concert crowd1](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/f48aa567-43ad-461f-bbb3-53fef432c139)
+![DEMOCRACY NOW1](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/46616290-a462-4463-88bb-eba22bf649c8)
+![At a protest in Arizona1](https://github.com/ChronosNoob/Reddit-Media-Downloader/assets/83444922/29cae80a-30a6-4e98-a77d-83196cdc885c)
